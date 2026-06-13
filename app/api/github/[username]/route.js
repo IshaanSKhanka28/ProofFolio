@@ -16,14 +16,14 @@ export async function GET(request, { params }) {
   // 2) Try to fetch and shape the data. The try/catch lets us turn a
   //    thrown "User not found" error into a clean 404 reply.
   try {
-    // Get the profile and repos from GitHub (via our helper).
-    const { profile, repos } = await fetchGitHubData(username);
+    // Get the profile, repos, and aggregate stats from GitHub (via our helper).
+    const { profile, repos, stats } = await fetchGitHubData(username);
 
     // Work out the top languages from those repos.
     const languages = calculateLanguages(repos);
 
     // 3) Send everything back to the browser as JSON.
-    return Response.json({ profile, languages, repos });
+    return Response.json({ profile, languages, repos, stats });
   } catch (error) {
     // 4) If the user does not exist, reply with 404.
     if (error.message === "User not found") {

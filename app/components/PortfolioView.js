@@ -11,6 +11,7 @@ import TiltCard from "./TiltCard";
 import LanguageBars from "./LanguageBars";
 import ProjectCard from "./ProjectCard";
 import Connect from "./Connect";
+import ActivityStats from "./ActivityStats";
 
 // The 3D scene is loaded client-only so Three.js never runs on the server.
 const HeroScene3D = dynamic(() => import("./HeroScene3D"), { ssr: false });
@@ -20,6 +21,7 @@ export default function PortfolioView({
   profile,
   languages,
   repos,
+  stats,
   actionSlot,
 }) {
   // Fall back to the username if GitHub has no display name.
@@ -27,11 +29,15 @@ export default function PortfolioView({
   // Add up the stars across all repos.
   const totalStars = repos.reduce((sum, r) => sum + (r.stars || 0), 0);
 
-  const stats = [
-    { value: profile.followers, label: "Followers" },
-    { value: repos.length, label: "Repositories" },
-    { value: totalStars, label: "Total Stars" },
-  ];
+  // Numbers for the ActivityStats card. Prefer the stats from the API; fall
+  // back to values we can derive from the profile + repos (used on the saved
+  // /p page, which doesn't carry a stats object — recentCommits is 0 there).
+  const activityStats = {
+    recentCommits: stats?.recentCommits ?? 0,
+    totalStars: stats?.totalStars ?? totalStars,
+    totalRepos: stats?.totalRepos ?? repos.length,
+    followers: stats?.followers ?? profile.followers,
+  };
 
   return (
     <main className="relative">
@@ -122,21 +128,9 @@ export default function PortfolioView({
       )}
 
       {/* ---------- Stats ---------- */}
+      {/* ---------- Activity stats ---------- */}
       <section className="mx-auto max-w-5xl px-6 py-16">
-        <div className="grid grid-cols-3 gap-4">
-          {stats.map((s, i) => (
-            <div
-              key={s.label}
-              className="animate-fade-up bg-card border border-border rounded-2xl p-6 text-center"
-              style={{ animationDelay: `${i * 0.1}s` }}
-            >
-              <div className="brand-grad font-display text-3xl font-bold sm:text-4xl">
-                {s.value}
-              </div>
-              <div className="mt-2 text-sm text-muted">{s.label}</div>
-            </div>
-          ))}
-        </div>
+        <ActivityStats stats={activityStats} />
       </section>
 
       {/* ---------- Languages ---------- */}

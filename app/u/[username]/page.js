@@ -69,6 +69,7 @@ export default function PortfolioPage() {
       profile={data.profile}
       languages={data.languages}
       repos={data.repos}
+      stats={data.stats}
       actionSlot={
         <SaveShare
           username={username}
