@@ -7,10 +7,10 @@
 // (saved data) so the look stays identical in both places.
 
 import dynamic from "next/dynamic";
-import { motion } from "framer-motion";
 import TiltCard from "./TiltCard";
 import LanguageBars from "./LanguageBars";
 import ProjectCard from "./ProjectCard";
+import Connect from "./Connect";
 
 // The 3D scene is loaded client-only so Three.js never runs on the server.
 const HeroScene3D = dynamic(() => import("./HeroScene3D"), { ssr: false });
@@ -47,55 +47,41 @@ export default function PortfolioView({
           }}
         />
 
-        {/* Left: identity. */}
+        {/* Left: identity. Entrance uses CSS animate-fade-up (SSR-safe). */}
         <div className="flex-1">
-          <motion.img
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6 }}
+          <img
             src={profile.avatarUrl}
             alt={displayName}
-            className="h-20 w-20 rounded-full object-cover ring-2 ring-accent/50"
+            className="animate-fade-up h-20 w-20 rounded-full object-cover ring-2 ring-accent/50"
           />
 
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.06 }}
-            className="kicker mt-6"
-          >
+          <p className="animate-fade-up kicker mt-6" style={{ animationDelay: "0.06s" }}>
             @{username}
-          </motion.p>
+          </p>
 
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.12 }}
-            className="brand-grad font-display text-5xl font-bold leading-tight sm:text-6xl mt-3"
+          <h1
+            className="animate-fade-up brand-grad font-display text-5xl font-bold leading-tight sm:text-6xl mt-3"
+            style={{ animationDelay: "0.12s" }}
           >
             {displayName}
-          </motion.h1>
+          </h1>
 
           {profile.bio && (
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.2 }}
-              className="mt-5 max-w-md text-muted leading-relaxed"
+            <p
+              className="animate-fade-up mt-5 max-w-md text-muted leading-relaxed"
+              style={{ animationDelay: "0.2s" }}
             >
               {profile.bio}
-            </motion.p>
+            </p>
           )}
 
           {profile.location && (
             <p className="mt-3 text-sm text-muted">📍 {profile.location}</p>
           )}
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.28 }}
-            className="mt-8 flex flex-wrap gap-4"
+          <div
+            className="animate-fade-up mt-8 flex flex-wrap gap-4"
+            style={{ animationDelay: "0.28s" }}
           >
             <a
               href={`https://github.com/${username}`}
@@ -111,7 +97,17 @@ export default function PortfolioView({
             >
               View projects
             </a>
-          </motion.div>
+          </div>
+
+          {/* Connect links (email / website / X) — only the ones that exist. */}
+          <div className="animate-fade-up mt-6" style={{ animationDelay: "0.34s" }}>
+            <Connect
+              email={profile.email}
+              blog={profile.blog}
+              twitterUsername={profile.twitterUsername}
+              socials={profile.socials}
+            />
+          </div>
         </div>
 
         {/* Right: the floating 3D object. */}

@@ -34,6 +34,15 @@ export async function fetchGitHubData(username) {
   // 5) Turn the repos response into an array of repo objects.
   const reposData = await reposRes.json();
 
+  // 5b) Fetch the user's linked social accounts (LinkedIn, Instagram, YouTube,
+  //     etc.). These live in a separate endpoint, not the main user object.
+  const socialsRes = await fetch(
+    `https://api.github.com/users/${username}/social_accounts`,
+    { headers }
+  );
+  // If it fails for any reason, just treat it as "no socials".
+  const socialsData = socialsRes.ok ? await socialsRes.json() : [];
+
   // 6) Build the clean profile object we actually want to use.
   //    We rename a few GitHub field names to friendlier names.
   const profile = {
@@ -42,6 +51,14 @@ export async function fetchGitHubData(username) {
     bio: user.bio,
     followers: user.followers,
     location: user.location,
+    email: user.email,
+    blog: user.blog,
+    twitterUsername: user.twitter_username,
+    // Linked social accounts as { provider, url }. We skip "twitter" here
+    // because we already show X via twitterUsername above.
+    socials: socialsData
+      .filter((account) => account.provider !== "twitter")
+      .map((account) => ({ provider: account.provider, url: account.url })),
   };
 
   // 7) Reshape each repo into just the fields we need for the portfolio.
