@@ -71,8 +71,74 @@ export async function fetchGitHubData(username) {
     language: repo.language,
   }));
 
-  // 8) Return both pieces together for the caller to use.
-  return { profile, repos };
+  // 8) Aggregate some stats from the repos we already fetched.
+  const totalStars = repos.reduce((sum, r) => sum + (r.stars || 0), 0);
+  const totalRepos = repos.length;
+  const topRepoStars = repos.reduce((max, r) => Math.max(max, r.stars || 0), 0);
+
+  // 9) Pull recent commit activity from the public events feed.
+  const activity = await fetchActivity(username);
+
+  // 10) Bundle the stats together (followers comes from the profile).
+  const stats = {
+    recentCommits: activity.recentCommits,
+    activeDays: activity.activeDays,
+    totalStars,
+    totalRepos,
+    topRepoStars,
+    followers: profile.followers,
+  };
+
+  // 11) Return everything. `stats` is additive — the existing shape is unchanged.
+  return { profile, repos, stats };
+}
+
+// Fetch a user's recent public activity and summarize their push activity:
+// how many commits they pushed recently, and on how many distinct days.
+export async function fetchActivity(username) {
+  // Same auth header pattern as above. The token stays on the server.
+  const headers = {
+    Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+    Accept: "application/vnd.github+json",
+    "User-Agent": "prooffolio",
+  };
+
+  // The public events feed returns the user's most recent activity.
+  const res = await fetch(
+    `https://api.github.com/users/${username}/events/public`,
+    { headers }
+  );
+
+  // If the request failed, treat it as no activity.
+  if (!res.ok) {
+    return { recentCommits: 0, activeDays: 0 };
+  }
+
+  const events = await res.json();
+
+  // If there are no events, return zeros.
+  if (!Array.isArray(events) || events.length === 0) {
+    return { recentCommits: 0, activeDays: 0 };
+  }
+
+  let recentCommits = 0;
+  const activeDays = new Set();
+
+  for (const event of events) {
+    // Only PushEvents contain commits.
+    if (event.type === "PushEvent") {
+      // Add the number of commits in this push. Prefer the commits array
+      // length; fall back to payload.size (also the commit count) when GitHub
+      // returns an abbreviated payload without the commits array.
+      recentCommits += event.payload?.commits?.length ?? event.payload?.size ?? 0;
+      // Record the day (the YYYY-MM-DD part of the timestamp) so we can
+      // count how many distinct days had push activity.
+      const day = event.created_at ? event.created_at.slice(0, 10) : null;
+      if (day) activeDays.add(day);
+    }
+  }
+
+  return { recentCommits, activeDays: activeDays.size };
 }
 
 // Work out which languages a user codes in most, as percentages.
