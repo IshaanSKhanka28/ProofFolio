@@ -1,37 +1,41 @@
 // app/api/portfolio/route.js
-// Our own API route. The browser calls THIS, and this calls GitHub.
-// That way the GitHub token stays on the server and never reaches the browser.
+// Saves a generated portfolio to MongoDB so it can be shared via a link.
+// The browser POSTs the current data here; we store (or update) it and return
+// the slug used in the share URL (/p/<slug>).
 
-import { fetchGitHubData, calculateLanguages } from "../../lib/github";
+import { connectDB } from "../../lib/db";
+import Portfolio from "../../models/Portfolio";
 
-// Handles GET requests like: /api/portfolio?username=torvalds
-export async function GET(request) {
-  // 1) Read the "username" value from the URL's query string.
-  const { searchParams } = new URL(request.url);
-  const username = searchParams.get("username");
-
-  // 2) If no username was given, reply with a 400 (bad request).
-  if (!username) {
-    return Response.json({ error: "Username is required" }, { status: 400 });
-  }
-
-  // 3) Try to fetch and shape the data. We wrap this in try/catch
-  //    so a "User not found" error becomes a clean 404 reply.
+export async function POST(request) {
   try {
-    // Get the profile and repos from GitHub (via our helper).
-    const { profile, repos } = await fetchGitHubData(username);
+    // 1) Read the data the browser sent.
+    const body = await request.json();
+    const { username, profile, languages, repos } = body;
 
-    // Work out the top languages from those repos.
-    const languages = calculateLanguages(repos);
-
-    // 4) Send everything back to the browser as JSON.
-    return Response.json({ profile, languages, repos });
-  } catch (error) {
-    // 5) If the helper threw "User not found", reply with 404.
-    //    Any other error becomes a generic 500 (server error).
-    if (error.message === "User not found") {
-      return Response.json({ error: "User not found" }, { status: 404 });
+    // 2) A username is required to build the slug / share link.
+    if (!username) {
+      return Response.json({ error: "Username is required" }, { status: 400 });
     }
-    return Response.json({ error: "Something went wrong" }, { status: 500 });
+
+    // 3) Make sure we have a database connection (reused if already open).
+    await connectDB();
+
+    // 4) Use the lowercased username as the slug so the link is /p/<username>.
+    const slug = username.toLowerCase();
+
+    // 5) Save it. findOneAndUpdate with upsert means: if this slug already
+    //    exists, update it; otherwise create a new document. This lets a user
+    //    re-save without hitting the "unique slug" error.
+    const portfolio = await Portfolio.findOneAndUpdate(
+      { slug },
+      { slug, username, profile, languages, repos },
+      { upsert: true, new: true, setDefaultsOnInsert: true }
+    );
+
+    // 6) Send back the slug so the page can build the share URL.
+    return Response.json({ slug: portfolio.slug });
+  } catch (error) {
+    // Any failure (bad data, DB down) becomes a 500 with a clear message.
+    return Response.json({ error: "Failed to save portfolio" }, { status: 500 });
   }
 }

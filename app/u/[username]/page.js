@@ -13,6 +13,7 @@ import { motion } from "framer-motion";
 import TiltCard from "../../components/TiltCard";
 import LanguageBars from "../../components/LanguageBars";
 import ProjectCard from "../../components/ProjectCard";
+import SaveShare from "../../components/SaveShare";
 
 // The 3D scene is loaded client-only so Three.js never runs on the server.
 const HeroScene3D = dynamic(() => import("../../components/HeroScene3D"), {
@@ -168,6 +169,16 @@ export default function PortfolioPage() {
         <div className="relative h-72 w-full flex-1 sm:h-96">
           <HeroScene3D />
         </div>
+      </section>
+
+      {/* ---------- Save & Share ---------- */}
+      <section className="mx-auto max-w-md px-6 pt-8">
+        <SaveShare
+          username={username}
+          profile={profile}
+          languages={languages}
+          repos={repos}
+        />
       </section>
 
       {/* ---------- Stats ---------- */}
