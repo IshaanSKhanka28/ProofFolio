@@ -66,6 +66,8 @@ export default async function SavedPortfolioPage({ params }) {
     contactPhone: doc.contactPhone ?? null,
     // The accent theme the user picked (defaults to forest).
     theme: doc.theme ?? "forest",
+    // Names of featured repos (empty array falls back to top-starred).
+    featuredRepos: doc.featuredRepos ?? [],
   };
 
   return (
@@ -78,6 +80,7 @@ export default async function SavedPortfolioPage({ params }) {
       customDescription={data.customDescription}
       contactPhone={data.contactPhone}
       theme={data.theme}
+      featuredRepos={data.featuredRepos}
     />
   );
 }

@@ -48,6 +48,9 @@ const PortfolioSchema = new mongoose.Schema({
   // The accent theme the user picked (e.g. "forest", "ocean"). Shown on /p.
   theme: String,
 
+  // Names of repos the user chose to feature first (max 6).
+  featuredRepos: [String],
+
   // Aggregate stats captured at save time (recent activity + totals).
   stats: {
     recentCommits: Number,

@@ -15,6 +15,7 @@ export default function SaveShare({
   stats,
   customDescription,
   contactPhone,
+  featuredRepos,
 }) {
   // status moves through: idle -> saving -> saved (or error).
   const [status, setStatus] = useState("idle");
@@ -41,6 +42,7 @@ export default function SaveShare({
           customDescription,
           contactPhone,
           theme,
+          featuredRepos,
         }),
       });
 

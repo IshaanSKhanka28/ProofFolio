@@ -36,11 +36,26 @@ export default function PortfolioView({
   customDescription,
   contactPhone,
   theme,
+  featuredRepos,
+  repoPickerSlot,
 }) {
   // Fall back to the username if GitHub has no display name.
   const displayName = profile.name || username;
   // Add up the stars across all repos.
   const totalStars = repos.reduce((sum, r) => sum + (r.stars || 0), 0);
+
+  // Order the projects: featured repos first (in the order they were picked),
+  // then the rest. If nothing is featured, fall back to top repos by stars.
+  const featuredList = featuredRepos ?? [];
+  const orderedRepos =
+    featuredList.length > 0
+      ? [
+          ...featuredList
+            .map((name) => repos.find((r) => r.name === name))
+            .filter(Boolean),
+          ...repos.filter((r) => !featuredList.includes(r.name)),
+        ]
+      : [...repos].sort((a, b) => (b.stars || 0) - (a.stars || 0));
 
   // Numbers for the ActivityStats card. Prefer the stats from the API; fall
   // back to values we can derive from the profile + repos (used on the saved
@@ -182,7 +197,7 @@ export default function PortfolioView({
           Projects
         </h2>
         <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {repos.map((repo, index) => (
+          {orderedRepos.map((repo, index) => (
             <div
               key={repo.name}
               className="animate-fade-up"
@@ -195,6 +210,9 @@ export default function PortfolioView({
           ))}
         </div>
       </section>
+
+      {/* ---------- Featured repositories picker (only on /u) ---------- */}
+      {repoPickerSlot}
 
       {/* ---------- Footer ---------- */}
       <footer className="mx-auto max-w-5xl px-6 py-16 text-center text-sm text-muted">

@@ -10,6 +10,7 @@ import { useParams } from "next/navigation";
 import PortfolioView from "../../components/PortfolioView";
 import SaveShare from "../../components/SaveShare";
 import ThemeSwitcher from "../../components/ThemeSwitcher";
+import FeaturedPicker from "../../components/FeaturedPicker";
 
 export default function PortfolioPage() {
   // Read the username from the URL, e.g. /u/torvalds -> "torvalds".
@@ -29,6 +30,18 @@ export default function PortfolioPage() {
   // The live theme (kept in sync with the theme switcher) so the 3D object
   // can re-color as the user switches themes.
   const [theme, setTheme] = useState("forest");
+
+  // Featured repo names (max 6) — selected ones show first in the grid.
+  const [featuredRepos, setFeaturedRepos] = useState([]);
+
+  // Toggle a repo in/out of the featured list, capped at 6.
+  function toggleFeatured(name) {
+    setFeaturedRepos((prev) => {
+      if (prev.includes(name)) return prev.filter((n) => n !== name);
+      if (prev.length >= 6) return prev; // at the cap: ignore new picks
+      return [...prev, name];
+    });
+  }
 
   // Fetch once when the page loads (or when the username changes).
   useEffect(() => {
@@ -81,6 +94,14 @@ export default function PortfolioPage() {
       repos={data.repos}
       stats={data.stats}
       theme={theme}
+      featuredRepos={featuredRepos}
+      repoPickerSlot={
+        <FeaturedPicker
+          repos={data.repos}
+          featured={featuredRepos}
+          onToggle={toggleFeatured}
+        />
+      }
       actionSlot={
         <div className="flex flex-col items-center gap-5">
           <ThemeSwitcher onChange={setTheme} />
@@ -121,6 +142,7 @@ export default function PortfolioPage() {
             stats={data.stats}
             customDescription={customDescription}
             contactPhone={contactPhone}
+            featuredRepos={featuredRepos}
           />
         </div>
       }
