@@ -49,6 +49,17 @@ export default async function SavedPortfolioPage({ params }) {
       liveUrl: r.liveUrl ?? null,
       language: r.language ?? null,
     })),
+    // The saved stats snapshot (may be absent on older saved portfolios).
+    stats: doc.stats
+      ? {
+          recentCommits: doc.stats.recentCommits ?? 0,
+          activeDays: doc.stats.activeDays ?? 0,
+          totalStars: doc.stats.totalStars ?? 0,
+          totalRepos: doc.stats.totalRepos ?? 0,
+          topRepoStars: doc.stats.topRepoStars ?? 0,
+          followers: doc.stats.followers ?? 0,
+        }
+      : null,
   };
 
   return (
@@ -57,6 +68,7 @@ export default async function SavedPortfolioPage({ params }) {
       profile={data.profile}
       languages={data.languages}
       repos={data.repos}
+      stats={data.stats}
     />
   );
 }

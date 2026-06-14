@@ -1,7 +1,6 @@
 // app/api/portfolio/route.js
-// Saves a generated portfolio to MongoDB so it can be shared via a link.
-// The browser POSTs the current data here; we store (or update) it and return
-// the slug used in the share URL (/p/<slug>).
+// POST handler that saves a generated portfolio to MongoDB and returns the
+// slug used in its share link (/p/<slug>).
 
 import { connectDB } from "../../lib/db";
 import Portfolio from "../../models/Portfolio";
@@ -9,33 +8,31 @@ import Portfolio from "../../models/Portfolio";
 export async function POST(request) {
   try {
     // 1) Read the data the browser sent.
-    const body = await request.json();
-    const { username, profile, languages, repos } = body;
+    const { username, profile, languages, repos, stats } = await request.json();
 
-    // 2) A username is required to build the slug / share link.
-    if (!username) {
-      return Response.json({ error: "Username is required" }, { status: 400 });
-    }
-
-    // 3) Make sure we have a database connection (reused if already open).
+    // 2) Make sure we have a database connection (reused if already open).
     await connectDB();
 
-    // 4) Use the lowercased username as the slug so the link is /p/<username>.
-    const slug = username.toLowerCase();
+    // 3) Build the slug from the username: trimmed and lowercased.
+    const slug = username.trim().toLowerCase();
 
-    // 5) Save it. findOneAndUpdate with upsert means: if this slug already
-    //    exists, update it; otherwise create a new document. This lets a user
-    //    re-save without hitting the "unique slug" error.
-    const portfolio = await Portfolio.findOneAndUpdate(
+    // 4) Upsert: if a portfolio with this slug already exists, update it;
+    //    otherwise create a new one. upsert:true means re-saving the same
+    //    username won't error on the unique slug.
+    await Portfolio.findOneAndUpdate(
       { slug },
-      { slug, username, profile, languages, repos },
+      { slug, username, profile, languages, repos, stats },
       { upsert: true, new: true, setDefaultsOnInsert: true }
     );
 
-    // 6) Send back the slug so the page can build the share URL.
-    return Response.json({ slug: portfolio.slug });
+    // 5) Success — send back the slug so the page can build the share URL.
+    return Response.json({ success: true, slug }, { status: 200 });
   } catch (error) {
-    // Any failure (bad data, DB down) becomes a 500 with a clear message.
-    return Response.json({ error: "Failed to save portfolio" }, { status: 500 });
+    // 6) On any failure: log it and return a 500 with the message.
+    console.error("Failed to save portfolio:", error);
+    return Response.json(
+      { success: false, error: error.message },
+      { status: 500 }
+    );
   }
 }

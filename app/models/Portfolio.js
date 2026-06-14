@@ -41,6 +41,16 @@ const PortfolioSchema = new mongoose.Schema({
     },
   ],
 
+  // Aggregate stats captured at save time (recent activity + totals).
+  stats: {
+    recentCommits: Number,
+    activeDays: Number,
+    totalStars: Number,
+    totalRepos: Number,
+    topRepoStars: Number,
+    followers: Number,
+  },
+
   // When this portfolio was saved. Defaults to the current time.
   createdAt: { type: Date, default: Date.now },
 });

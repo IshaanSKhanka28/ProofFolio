@@ -7,7 +7,7 @@
 
 import { useState } from "react";
 
-export default function SaveShare({ username, profile, languages, repos }) {
+export default function SaveShare({ username, profile, languages, repos, stats }) {
   // status moves through: idle -> saving -> saved (or error).
   const [status, setStatus] = useState("idle");
   const [shareUrl, setShareUrl] = useState("");
@@ -20,7 +20,7 @@ export default function SaveShare({ username, profile, languages, repos }) {
       const res = await fetch("/api/portfolio", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, profile, languages, repos }),
+        body: JSON.stringify({ username, profile, languages, repos, stats }),
       });
 
       // If the server returned an error status, show the error state.
