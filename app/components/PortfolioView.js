@@ -12,6 +12,7 @@ import LanguageBars from "./LanguageBars";
 import ProjectCard from "./ProjectCard";
 import Connect from "./Connect";
 import ActivityStats from "./ActivityStats";
+import Reveal from "./Reveal";
 
 // The 3D scene is loaded client-only so Three.js never runs on the server.
 const HeroScene3D = dynamic(() => import("./HeroScene3D"), { ssr: false });
@@ -96,7 +97,7 @@ export default function PortfolioView({
           </p>
 
           <h1
-            className="animate-fade-up brand-grad font-display text-5xl font-bold leading-tight sm:text-6xl mt-3"
+            className="animate-fade-up brand-grad font-display text-5xl font-bold leading-tight tracking-tight sm:text-6xl mt-3"
             style={{ animationDelay: "0.12s" }}
           >
             {displayName}
@@ -182,30 +183,27 @@ export default function PortfolioView({
 
       {/* ---------- Languages ---------- */}
       <section className="mx-auto max-w-5xl px-6 py-12">
-        <h2 className="animate-fade-up brand-grad font-display text-3xl font-bold sm:text-4xl">
+        <h2 className="animate-fade-up brand-grad font-display text-3xl font-bold tracking-tight sm:text-4xl">
           Languages
         </h2>
-        <div className="animate-fade-up bg-card border border-border rounded-3xl p-8 mt-8">
+        <Reveal className="bg-card border border-border rounded-3xl p-8 mt-8">
           <LanguageBars languages={languages} />
-        </div>
+        </Reveal>
       </section>
 
       {/* ---------- Projects ---------- */}
       <section id="projects" className="mx-auto max-w-5xl scroll-mt-24 px-6 py-12">
-        <h2 className="animate-fade-up brand-grad font-display text-3xl font-bold sm:text-4xl">
+        <h2 className="animate-fade-up brand-grad font-display text-3xl font-bold tracking-tight sm:text-4xl">
           Projects
         </h2>
         <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {orderedRepos.map((repo, index) => (
-            <div
-              key={repo.name}
-              className="animate-fade-up"
-              style={{ animationDelay: `${0.1 + (index % 3) * 0.08}s` }}
-            >
+            // Each card scroll-reveals, staggered within its row.
+            <Reveal key={repo.name} delay={(index % 3) * 0.06}>
               <TiltCard>
                 <ProjectCard repo={repo} />
               </TiltCard>
-            </div>
+            </Reveal>
           ))}
         </div>
       </section>

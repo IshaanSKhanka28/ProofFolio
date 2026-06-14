@@ -34,7 +34,8 @@ export default function TiltCard({ children, className = "" }) {
       onMouseMove={handleMove}
       onMouseLeave={reset}
       style={{ rotateX, rotateY, transformPerspective: 900 }}
-      whileHover={{ y: -6 }}
+      whileHover={{ y: -6, scale: 1.02 }}
+      transition={{ type: "spring", stiffness: 300, damping: 20 }}
       className={`h-full glow-green ${className}`}
     >
       {children}
