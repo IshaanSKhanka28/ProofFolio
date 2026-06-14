@@ -63,6 +63,8 @@ export default async function SavedPortfolioPage({ params }) {
     // Optional custom fields the user saved (shown read-only on /p).
     customDescription: doc.customDescription ?? null,
     contactPhone: doc.contactPhone ?? null,
+    // The accent theme the user picked (defaults to forest).
+    theme: doc.theme ?? "forest",
   };
 
   return (
@@ -74,6 +76,7 @@ export default async function SavedPortfolioPage({ params }) {
       stats={data.stats}
       customDescription={data.customDescription}
       contactPhone={data.contactPhone}
+      theme={data.theme}
     />
   );
 }

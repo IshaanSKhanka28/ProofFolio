@@ -8,7 +8,7 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { Float, MeshDistortMaterial, Icosahedron } from "@react-three/drei";
 import { useRef, useState, useEffect } from "react";
 
-function Blob() {
+function Blob({ color, emissive }) {
   const mesh = useRef(null);
   const [pointer, setPointer] = useState({ x: 0, y: 0 });
 
@@ -35,10 +35,10 @@ function Blob() {
   return (
     <Float speed={1.5} rotationIntensity={0.6} floatIntensity={1.2}>
       <Icosahedron ref={mesh} args={[1.4, 4]}>
-        {/* Forest-green material — deep green base, soft accent-green glow. */}
+        {/* Material colors come from the active theme (default forest). */}
         <MeshDistortMaterial
-          color="#33543f"
-          emissive="#5e9c78"
+          color={color}
+          emissive={emissive}
           emissiveIntensity={0.35}
           roughness={0.2}
           metalness={0.5}
@@ -50,14 +50,14 @@ function Blob() {
   );
 }
 
-export default function HeroScene3D() {
+export default function HeroScene3D({ color = "#33543f", emissive = "#5e9c78" }) {
   return (
     <Canvas camera={{ position: [0, 0, 4.5], fov: 45 }} dpr={[1, 1.8]} gl={{ alpha: true }}>
       <ambientLight intensity={0.7} />
-      {/* Light sage + accent green lights instead of cyan/purple. */}
-      <pointLight position={[4, 4, 4]} intensity={2} color="#9fe1cb" />
-      <pointLight position={[-4, -2, 2]} intensity={1.6} color="#5e9c78" />
-      <Blob />
+      {/* Lights use the theme's accent glow so the object reads on-theme. */}
+      <pointLight position={[4, 4, 4]} intensity={2} color={emissive} />
+      <pointLight position={[-4, -2, 2]} intensity={1.6} color={emissive} />
+      <Blob color={color} emissive={emissive} />
     </Canvas>
   );
 }

@@ -15,7 +15,7 @@ const THEMES = [
   { id: "mono", label: "Mono" },
 ];
 
-export default function ThemeSwitcher() {
+export default function ThemeSwitcher({ onChange }) {
   const [theme, setTheme] = useState("forest");
 
   // On first load, apply whatever theme was saved last time.
@@ -23,13 +23,18 @@ export default function ThemeSwitcher() {
     const saved = localStorage.getItem("pf-theme") || "forest";
     setTheme(saved);
     document.documentElement.dataset.theme = saved;
+    onChange?.(saved);
+    // onChange is from the parent and stable; we only want this on mount.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Switch theme: update the page, the button state, and remember the choice.
+  // Switch theme: update the page, the button state, remember it, and tell
+  // the parent (so the 3D object can re-color live).
   function pick(id) {
     setTheme(id);
     document.documentElement.dataset.theme = id;
     localStorage.setItem("pf-theme", id);
+    onChange?.(id);
   }
 
   return (

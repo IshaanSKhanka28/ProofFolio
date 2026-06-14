@@ -26,6 +26,10 @@ export default function PortfolioPage() {
   const [customDescription, setCustomDescription] = useState("");
   const [contactPhone, setContactPhone] = useState("");
 
+  // The live theme (kept in sync with the theme switcher) so the 3D object
+  // can re-color as the user switches themes.
+  const [theme, setTheme] = useState("forest");
+
   // Fetch once when the page loads (or when the username changes).
   useEffect(() => {
     async function loadData() {
@@ -76,9 +80,10 @@ export default function PortfolioPage() {
       languages={data.languages}
       repos={data.repos}
       stats={data.stats}
+      theme={theme}
       actionSlot={
         <div className="flex flex-col items-center gap-5">
-          <ThemeSwitcher />
+          <ThemeSwitcher onChange={setTheme} />
 
           {/* Customize card: optional fields saved with the portfolio.
               These appear ONLY here on /u (as inputs), never on /p. */}

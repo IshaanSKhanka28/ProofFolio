@@ -16,6 +16,16 @@ import ActivityStats from "./ActivityStats";
 // The 3D scene is loaded client-only so Three.js never runs on the server.
 const HeroScene3D = dynamic(() => import("./HeroScene3D"), { ssr: false });
 
+// Per-theme colors for the floating 3D object (base color + glow), so it
+// matches whichever accent theme is active.
+const THEME_3D = {
+  forest: { color: "#33543f", emissive: "#5e9c78" },
+  ocean: { color: "#2f4a63", emissive: "#5a9bd4" },
+  sunset: { color: "#634a2f", emissive: "#d49a5a" },
+  violet: { color: "#45406a", emissive: "#8a7bc8" },
+  mono: { color: "#46504c", emissive: "#9aa3a0" },
+};
+
 export default function PortfolioView({
   username,
   profile,
@@ -25,6 +35,7 @@ export default function PortfolioView({
   actionSlot,
   customDescription,
   contactPhone,
+  theme,
 }) {
   // Fall back to the username if GitHub has no display name.
   const displayName = profile.name || username;
@@ -42,7 +53,9 @@ export default function PortfolioView({
   };
 
   return (
-    <main className="relative">
+    // data-theme applies the saved accent on /p (the live /u page sets it on
+    // <html> via the theme switcher instead, so theme is undefined there).
+    <main className="relative" data-theme={theme}>
       {/* ---------- Hero ---------- */}
       <section className="relative mx-auto flex min-h-screen max-w-5xl flex-col items-center gap-8 px-6 pt-24 md:flex-row md:pt-0">
         {/* Soft forest-green glow behind the hero. */}
@@ -132,9 +145,12 @@ export default function PortfolioView({
           )}
         </div>
 
-        {/* Right: the floating 3D object. */}
+        {/* Right: the floating 3D object, colored to match the active theme. */}
         <div className="relative h-72 w-full flex-1 sm:h-96">
-          <HeroScene3D />
+          <HeroScene3D
+            color={(THEME_3D[theme] || THEME_3D.forest).color}
+            emissive={(THEME_3D[theme] || THEME_3D.forest).emissive}
+          />
         </div>
       </section>
 

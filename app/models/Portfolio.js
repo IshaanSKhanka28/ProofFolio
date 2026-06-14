@@ -45,6 +45,9 @@ const PortfolioSchema = new mongoose.Schema({
   customDescription: String,
   contactPhone: String,
 
+  // The accent theme the user picked (e.g. "forest", "ocean"). Shown on /p.
+  theme: String,
+
   // Aggregate stats captured at save time (recent activity + totals).
   stats: {
     recentCommits: Number,

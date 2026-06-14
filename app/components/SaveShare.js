@@ -25,6 +25,10 @@ export default function SaveShare({
   async function handleSave() {
     setStatus("saving");
     try {
+      // The chosen theme is kept in localStorage by the theme switcher; save it
+      // too so the shared /p page shows the same theme.
+      const theme = localStorage.getItem("pf-theme") || "forest";
+
       const res = await fetch("/api/portfolio", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -36,6 +40,7 @@ export default function SaveShare({
           stats,
           customDescription,
           contactPhone,
+          theme,
         }),
       });
 
