@@ -45,8 +45,8 @@ const PortfolioSchema = new mongoose.Schema({
   customDescription: String,
   contactPhone: String,
 
-  // The accent theme the user picked (e.g. "forest", "ocean"). Shown on /p.
-  theme: String,
+  // The accent theme the user picked (forest | slate | amber | plum). Shown on /p.
+  theme: { type: String, default: "forest" },
 
   // Names of repos the user chose to feature first (max 6).
   featuredRepos: [String],

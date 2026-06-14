@@ -20,10 +20,9 @@ const HeroScene3D = dynamic(() => import("./HeroScene3D"), { ssr: false });
 // matches whichever accent theme is active.
 const THEME_3D = {
   forest: { color: "#33543f", emissive: "#5e9c78" },
-  ocean: { color: "#2f4a63", emissive: "#5a9bd4" },
-  sunset: { color: "#634a2f", emissive: "#d49a5a" },
-  violet: { color: "#45406a", emissive: "#8a7bc8" },
-  mono: { color: "#46504c", emissive: "#9aa3a0" },
+  slate: { color: "#3a4654", emissive: "#748ba0" },
+  amber: { color: "#5a472d", emissive: "#c79a5b" },
+  plum: { color: "#4a3d52", emissive: "#9a7fa6" },
 };
 
 export default function PortfolioView({

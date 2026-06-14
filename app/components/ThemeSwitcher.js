@@ -7,12 +7,13 @@
 
 import { useState, useEffect } from "react";
 
+// Four accent presets, all on the same charcoal background. `color` is the
+// swatch fill (matches each theme's --accent in globals.css).
 const THEMES = [
-  { id: "forest", label: "Forest" },
-  { id: "ocean", label: "Ocean" },
-  { id: "sunset", label: "Sunset" },
-  { id: "violet", label: "Violet" },
-  { id: "mono", label: "Mono" },
+  { id: "forest", label: "Forest", color: "#5e9c78" },
+  { id: "slate", label: "Slate", color: "#748ba0" },
+  { id: "amber", label: "Amber", color: "#c79a5b" },
+  { id: "plum", label: "Plum", color: "#9a7fa6" },
 ];
 
 export default function ThemeSwitcher({ onChange }) {
@@ -38,19 +39,31 @@ export default function ThemeSwitcher({ onChange }) {
   }
 
   return (
-    <div className="flex flex-wrap items-center justify-center gap-2">
+    <div className="flex flex-wrap items-center justify-center gap-4">
       <span className="kicker mr-1">Theme</span>
       {THEMES.map((t) => (
         <button
           key={t.id}
+          type="button"
           onClick={() => pick(t.id)}
-          className={`rounded-full border px-4 py-1.5 text-xs transition-colors ${
-            theme === t.id
-              ? "border-accent text-accent"
-              : "border-border text-muted hover:border-accent"
-          }`}
+          aria-label={t.label}
+          title={t.label}
+          className="flex flex-col items-center gap-1.5"
         >
-          {t.label}
+          {/* The color swatch; the selected one gets a ring. */}
+          <span
+            className={`h-7 w-7 rounded-full border-2 transition-transform hover:scale-110 ${
+              theme === t.id ? "border-foreground" : "border-transparent"
+            }`}
+            style={{ backgroundColor: t.color }}
+          />
+          <span
+            className={`text-[10px] ${
+              theme === t.id ? "text-foreground" : "text-muted"
+            }`}
+          >
+            {t.label}
+          </span>
         </button>
       ))}
     </div>

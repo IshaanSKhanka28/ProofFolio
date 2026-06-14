@@ -17,28 +17,24 @@
   --brand-light: #cfe4d4;                 /* light tint used in the wordmark gradient */
 }
 
-/* Alternate themes — the theme switcher sets data-theme on <html>. They only
-   change the accent + its tints; the charcoal canvas stays the same. All are
-   muted (no neon). The default (forest) is the :root values above. */
-[data-theme="ocean"] {
-  --accent: #5a9bd4;
-  --accent-soft: rgba(90, 155, 212, 0.16);
-  --brand-light: #cfe0f0;
+/* Accent presets — the theme switcher sets data-theme on <html> (and /p sets
+   it on its wrapper). They only change the accent + its tints; the deep
+   charcoal canvas stays the same. All are muted (no neon). The default
+   (forest) is the :root values above. */
+[data-theme="slate"] {
+  --accent: #748ba0;                       /* cool blue-grey */
+  --accent-soft: rgba(116, 139, 160, 0.16);
+  --brand-light: #d2dbe3;
 }
-[data-theme="sunset"] {
-  --accent: #d49a5a;
-  --accent-soft: rgba(212, 154, 90, 0.16);
-  --brand-light: #f0e2cf;
+[data-theme="amber"] {
+  --accent: #c79a5b;                       /* muted warm amber */
+  --accent-soft: rgba(199, 154, 91, 0.16);
+  --brand-light: #ecdcc2;
 }
-[data-theme="violet"] {
-  --accent: #8a7bc8;
-  --accent-soft: rgba(138, 123, 200, 0.16);
-  --brand-light: #ddd6f0;
-}
-[data-theme="mono"] {
-  --accent: #9aa3a0;
-  --accent-soft: rgba(154, 163, 160, 0.16);
-  --brand-light: #dfe3e1;
+[data-theme="plum"] {
+  --accent: #9a7fa6;                       /* muted desaturated violet */
+  --accent-soft: rgba(154, 127, 166, 0.16);
+  --brand-light: #ddd1e2;
 }
 
 /* Registering variables here is what creates the utility classes, e.g.
