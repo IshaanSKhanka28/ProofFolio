@@ -56,6 +56,7 @@ export default async function SavedPortfolioPage({ params }) {
           activeDays: doc.stats.activeDays ?? 0,
           totalStars: doc.stats.totalStars ?? 0,
           totalRepos: doc.stats.totalRepos ?? 0,
+          totalForks: doc.stats.totalForks ?? 0,
           topRepoStars: doc.stats.topRepoStars ?? 0,
           followers: doc.stats.followers ?? 0,
         }

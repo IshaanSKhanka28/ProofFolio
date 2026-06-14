@@ -49,6 +49,7 @@ export default function PortfolioView({
     recentCommits: stats?.recentCommits ?? 0,
     totalStars: stats?.totalStars ?? totalStars,
     totalRepos: stats?.totalRepos ?? repos.length,
+    totalForks: stats?.totalForks ?? 0,
     followers: stats?.followers ?? profile.followers,
   };
 

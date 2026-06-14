@@ -6,14 +6,15 @@
 export default function ActivityStats({ stats }) {
   // Read each number from the stats object, defaulting to 0 if missing.
   const blocks = [
-    { value: stats?.recentCommits ?? 0, label: "Recent Commits" },
+    { value: stats?.totalRepos ?? 0, label: "Repositories" },
     { value: stats?.totalStars ?? 0, label: "Total Stars" },
-    { value: stats?.totalRepos ?? 0, label: "Public Repos" },
+    { value: stats?.totalForks ?? 0, label: "Total Forks" },
     { value: stats?.followers ?? 0, label: "Followers" },
+    { value: stats?.recentCommits ?? 0, label: "Recent Commits" },
   ];
 
   return (
-    <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
       {blocks.map((block, i) => (
         <div
           key={block.label}

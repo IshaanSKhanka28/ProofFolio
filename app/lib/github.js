@@ -75,18 +75,22 @@ export async function fetchGitHubData(username) {
   const totalStars = repos.reduce((sum, r) => sum + (r.stars || 0), 0);
   const totalRepos = repos.length;
   const topRepoStars = repos.reduce((max, r) => Math.max(max, r.stars || 0), 0);
+  // Forks aren't on our mapped repo objects, so sum them from the raw data.
+  const totalForks = reposData.reduce((sum, r) => sum + (r.forks_count || 0), 0);
 
   // 9) Pull recent commit activity from the public events feed.
   const activity = await fetchActivity(username);
 
-  // 10) Bundle the stats together (followers comes from the profile).
+  // 10) Bundle the stats together (followers comes from the profile). Every
+  //     value falls back to 0 if it is missing.
   const stats = {
-    recentCommits: activity.recentCommits,
-    activeDays: activity.activeDays,
-    totalStars,
-    totalRepos,
-    topRepoStars,
-    followers: profile.followers,
+    recentCommits: activity.recentCommits ?? 0,
+    activeDays: activity.activeDays ?? 0,
+    totalStars: totalStars ?? 0,
+    totalRepos: totalRepos ?? 0,
+    totalForks: totalForks ?? 0,
+    topRepoStars: topRepoStars ?? 0,
+    followers: profile.followers ?? 0,
   };
 
   // 11) Return everything. `stats` is additive — the existing shape is unchanged.

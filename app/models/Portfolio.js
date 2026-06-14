@@ -54,6 +54,7 @@ const PortfolioSchema = new mongoose.Schema({
     activeDays: Number,
     totalStars: Number,
     totalRepos: Number,
+    totalForks: Number,
     topRepoStars: Number,
     followers: Number,
   },
