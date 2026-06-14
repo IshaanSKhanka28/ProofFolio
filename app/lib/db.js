@@ -8,14 +8,6 @@
 
 import mongoose from "mongoose";
 
-// Read the connection string from the environment (.env.local). Server-side only.
-const MONGODB_URI = process.env.MONGODB_URI;
-
-// Fail fast with a clear message if the variable is missing.
-if (!MONGODB_URI) {
-  throw new Error("Missing MONGODB_URI environment variable");
-}
-
 // Reuse a cache stored on the global object so it survives hot-reloads.
 // (globalThis is the same object across reloads; a normal variable would reset.)
 let cached = globalThis.mongooseCache;
@@ -25,6 +17,14 @@ if (!cached) {
 
 // connectDB(): returns a live Mongoose connection, reusing it if possible.
 export async function connectDB() {
+  // Read the connection string at call time (NOT at module load), so merely
+  // importing this file never crashes the build. Only fail if we actually try
+  // to connect without the variable set.
+  const MONGODB_URI = process.env.MONGODB_URI;
+  if (!MONGODB_URI) {
+    throw new Error("Missing MONGODB_URI environment variable");
+  }
+
   // 1) If we already connected, return that same connection.
   if (cached.conn) {
     return cached.conn;
