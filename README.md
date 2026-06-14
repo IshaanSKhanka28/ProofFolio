@@ -37,6 +37,8 @@ visually stunning portfolio. One username. One click. Real proof.
 ---
 
 ## 🏗️ Architecture
+[Architecture](architecture.png)
+
 USER (browser)
 
 ↓  types username
