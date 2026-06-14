@@ -41,6 +41,10 @@ const PortfolioSchema = new mongoose.Schema({
     },
   ],
 
+  // Optional custom fields the user filled in before saving.
+  customDescription: String,
+  contactPhone: String,
+
   // Aggregate stats captured at save time (recent activity + totals).
   stats: {
     recentCommits: Number,

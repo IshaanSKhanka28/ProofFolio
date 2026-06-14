@@ -60,6 +60,9 @@ export default async function SavedPortfolioPage({ params }) {
           followers: doc.stats.followers ?? 0,
         }
       : null,
+    // Optional custom fields the user saved (shown read-only on /p).
+    customDescription: doc.customDescription ?? null,
+    contactPhone: doc.contactPhone ?? null,
   };
 
   return (
@@ -69,6 +72,8 @@ export default async function SavedPortfolioPage({ params }) {
       languages={data.languages}
       repos={data.repos}
       stats={data.stats}
+      customDescription={data.customDescription}
+      contactPhone={data.contactPhone}
     />
   );
 }

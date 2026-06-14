@@ -8,7 +8,15 @@ import Portfolio from "../../models/Portfolio";
 export async function POST(request) {
   try {
     // 1) Read the data the browser sent.
-    const { username, profile, languages, repos, stats } = await request.json();
+    const {
+      username,
+      profile,
+      languages,
+      repos,
+      stats,
+      customDescription,
+      contactPhone,
+    } = await request.json();
 
     // 2) Make sure we have a database connection (reused if already open).
     await connectDB();
@@ -21,7 +29,7 @@ export async function POST(request) {
     //    username won't error on the unique slug.
     await Portfolio.findOneAndUpdate(
       { slug },
-      { slug, username, profile, languages, repos, stats },
+      { slug, username, profile, languages, repos, stats, customDescription, contactPhone },
       { upsert: true, new: true, setDefaultsOnInsert: true }
     );
 

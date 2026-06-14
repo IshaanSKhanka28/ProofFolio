@@ -14,6 +14,31 @@
   --accent: #5e9c78;                      /* subtle forest green */
   --accent-soft: rgba(94, 156, 120, 0.16);/* green used for gl*ows* and tints */
   --surface: rgba(255, 255, 255, 0.06);   /* slightly brighter wash, e.g. bar tracks */
+  --brand-light: #cfe4d4;                 /* light tint used in the wordmark gradient */
+}
+
+/* Alternate themes — the theme switcher sets data-theme on <html>. They only
+   change the accent + its tints; the charcoal canvas stays the same. All are
+   muted (no neon). The default (forest) is the :root values above. */
+[data-theme="ocean"] {
+  --accent: #5a9bd4;
+  --accent-soft: rgba(90, 155, 212, 0.16);
+  --brand-light: #cfe0f0;
+}
+[data-theme="sunset"] {
+  --accent: #d49a5a;
+  --accent-soft: rgba(212, 154, 90, 0.16);
+  --brand-light: #f0e2cf;
+}
+[data-theme="violet"] {
+  --accent: #8a7bc8;
+  --accent-soft: rgba(138, 123, 200, 0.16);
+  --brand-light: #ddd6f0;
+}
+[data-theme="mono"] {
+  --accent: #9aa3a0;
+  --accent-soft: rgba(154, 163, 160, 0.16);
+  --brand-light: #dfe3e1;
 }
 
 /* Registering variables here is what creates the utility classes, e.g.
@@ -76,7 +101,7 @@ body::before {
 /* The "ProofFolio" wordmark: a soft forest-green gradient (sage -> accent).
    Stays on-mandate — green family only, no neon. */
 .brand-grad {
-  background: linear-gradient(100deg, #cfe4d4, #7fb88a 45%, var(--accent));
+  background: linear-gradient(100deg, var(--brand-light), var(--accent));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;

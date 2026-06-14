@@ -23,6 +23,8 @@ export default function PortfolioView({
   repos,
   stats,
   actionSlot,
+  customDescription,
+  contactPhone,
 }) {
   // Fall back to the username if GitHub has no display name.
   const displayName = profile.name || username;
@@ -85,6 +87,13 @@ export default function PortfolioView({
             <p className="mt-3 text-sm text-muted">📍 {profile.location}</p>
           )}
 
+          {/* Custom headline/description (saved on /p only). */}
+          {customDescription && (
+            <p className="animate-fade-up mt-5 max-w-md border-l-2 border-accent pl-3 leading-relaxed text-foreground/90">
+              {customDescription}
+            </p>
+          )}
+
           <div
             className="animate-fade-up mt-8 flex flex-wrap gap-4"
             style={{ animationDelay: "0.28s" }}
@@ -114,6 +123,13 @@ export default function PortfolioView({
               socials={profile.socials}
             />
           </div>
+
+          {/* Contact phone (saved on /p only). */}
+          {contactPhone && (
+            <p className="mt-4 text-sm text-muted">
+              <span className="text-accent">Contact:</span> {contactPhone}
+            </p>
+          )}
         </div>
 
         {/* Right: the floating 3D object. */}

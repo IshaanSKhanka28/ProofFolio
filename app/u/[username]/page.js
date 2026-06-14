@@ -9,6 +9,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import PortfolioView from "../../components/PortfolioView";
 import SaveShare from "../../components/SaveShare";
+import ThemeSwitcher from "../../components/ThemeSwitcher";
 
 export default function PortfolioPage() {
   // Read the username from the URL, e.g. /u/torvalds -> "torvalds".
@@ -19,6 +20,11 @@ export default function PortfolioPage() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // Optional custom fields the user can fill in before saving. These show as
+  // inputs here on /u and are saved with the portfolio for the /p page.
+  const [customDescription, setCustomDescription] = useState("");
+  const [contactPhone, setContactPhone] = useState("");
 
   // Fetch once when the page loads (or when the username changes).
   useEffect(() => {
@@ -71,13 +77,47 @@ export default function PortfolioPage() {
       repos={data.repos}
       stats={data.stats}
       actionSlot={
-        <SaveShare
-          username={username}
-          profile={data.profile}
-          languages={data.languages}
-          repos={data.repos}
-          stats={data.stats}
-        />
+        <div className="flex flex-col items-center gap-5">
+          <ThemeSwitcher />
+
+          {/* Customize card: optional fields saved with the portfolio.
+              These appear ONLY here on /u (as inputs), never on /p. */}
+          <div className="w-full bg-card border border-border rounded-2xl p-5">
+            <p className="kicker mb-4">Customize (optional)</p>
+
+            <label className="block text-sm text-muted mb-1">
+              Headline / Description
+            </label>
+            <textarea
+              value={customDescription}
+              onChange={(e) => setCustomDescription(e.target.value)}
+              rows={2}
+              placeholder="A short tagline about you..."
+              className="w-full resize-none bg-surface border border-border rounded-xl px-3 py-2 text-sm placeholder:text-muted outline-none focus:border-accent transition-colors"
+            />
+
+            <label className="block text-sm text-muted mt-3 mb-1">
+              Contact Phone
+            </label>
+            <input
+              type="text"
+              value={contactPhone}
+              onChange={(e) => setContactPhone(e.target.value)}
+              placeholder="e.g. +1 555 123 4567"
+              className="w-full bg-surface border border-border rounded-xl px-3 py-2 text-sm placeholder:text-muted outline-none focus:border-accent transition-colors"
+            />
+          </div>
+
+          <SaveShare
+            username={username}
+            profile={data.profile}
+            languages={data.languages}
+            repos={data.repos}
+            stats={data.stats}
+            customDescription={customDescription}
+            contactPhone={contactPhone}
+          />
+        </div>
       }
     />
   );
