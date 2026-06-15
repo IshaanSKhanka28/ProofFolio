@@ -10,7 +10,7 @@ const MAX_FEATURED = 6;
 
 export default function FeaturedPicker({ repos, featured, onToggle }) {
   return (
-    <section className="mx-auto max-w-5xl px-6 py-12">
+    <section className="mx-auto max-w-5xl px-6 py-12 no-print">
       <h2 className="brand-grad font-display text-3xl font-bold sm:text-4xl">
         Featured Repositories
       </h2>

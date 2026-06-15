@@ -225,3 +225,113 @@ body::before {
     animation: none;
   }
 }
+
+/* ===========================================================================
+   Print / PDF styles. Clicking "Download as PDF" calls window.print(); these
+   rules turn the dark portfolio into a clean white, black-text document.
+   =========================================================================== */
+@media print {
+  /* Light palette so the PDF is white with dark text. !important on the custom
+     properties beats the per-theme [data-theme] accent values. */
+  :root,
+  [data-theme] {
+    --background: #ffffff !important;
+    --foreground: #111111 !important;
+    --card: #ffffff !important;
+    --border: #d0d0d0 !important;
+    --muted: #555555 !important;
+    --surface: #f3f3f3 !important;
+    --accent: #2f6b4a !important; /* darker green for ink contrast */
+    --accent-soft: transparent !important;
+    --brand-light: #2f6b4a !important;
+  }
+
+  body {
+    background: #ffffff !important;
+    color: #111111 !important;
+    background-image: none !important; /* drop the aurora glow */
+  }
+  body::before {
+    display: none !important; /* drop the grain overlay */
+  }
+
+  /* Hide interactive controls and the 3D canvas — not useful in a PDF. */
+  .no-print,
+  button,
+  input,
+  textarea,
+  select,
+  nav,
+  canvas {
+    display: none !important;
+  }
+
+  /* Make the gradient wordmark a solid dark green so it reads on white. */
+  .brand-grad {
+    background: none !important;
+    -webkit-text-fill-color: #2f6b4a !important;
+    color: #2f6b4a !important;
+  }
+
+  /* Framer Motion hides un-scrolled sections (opacity 0); force everything
+     visible and drop the full-screen hero height so the PDF flows naturally. */
+  * {
+    opacity: 1 !important;
+  }
+  .min-h-screen {
+    min-height: 0 !important;
+  }
+  .animate-fade-up {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  /* ---- Compress everything onto a single page ---- */
+  @page {
+    margin: 1.1cm;
+  }
+  /* Shrink the base font: all of Tailwind's rem-based sizing/spacing scales
+     down with it, compressing the whole layout uniformly. */
+  html {
+    font-size: 11.5px;
+  }
+  /* Tighten the vertical rhythm between sections. */
+  section,
+  footer {
+    padding-top: 0.55rem !important;
+    padding-bottom: 0.55rem !important;
+  }
+  main > section:first-of-type {
+    padding-top: 0 !important;
+    gap: 0.75rem !important;
+  }
+  /* Smaller avatar (the only <img> in the portfolio). */
+  main img {
+    width: 3.25rem !important;
+    height: 3.25rem !important;
+  }
+  /* Smaller, tighter headings. */
+  h1 {
+    font-size: 1.7rem !important;
+    margin-top: 0.25rem !important;
+  }
+  h2 {
+    font-size: 1.05rem !important;
+    margin-bottom: 0.35rem !important;
+  }
+  /* Tighter grids and compact cards that don't split across pages. */
+  .grid {
+    gap: 0.5rem !important;
+  }
+  .bg-card {
+    padding: 0.55rem 0.75rem !important;
+    break-inside: avoid;
+  }
+  /* Keep projects compact: 2 columns, at most 6 cards (top/featured first). */
+  #projects .grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  #projects .grid > *:nth-child(n + 7) {
+    display: none !important;
+  }
+}

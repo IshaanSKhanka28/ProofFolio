@@ -124,7 +124,7 @@ export default function PortfolioView({
           )}
 
           <div
-            className="animate-fade-up mt-8 flex flex-wrap gap-4"
+            className="animate-fade-up no-print mt-8 flex flex-wrap gap-4"
             style={{ animationDelay: "0.28s" }}
           >
             <a
@@ -141,6 +141,14 @@ export default function PortfolioView({
             >
               View projects
             </a>
+            {/* Native browser print -> "Save as PDF". Hidden in the PDF itself. */}
+            <button
+              type="button"
+              onClick={() => window.print()}
+              className="border border-border rounded-full px-6 py-3 text-sm font-semibold transition-colors hover:border-accent"
+            >
+              Download as PDF
+            </button>
           </div>
 
           {/* Connect links (email / website / X) — only the ones that exist. */}
@@ -162,7 +170,7 @@ export default function PortfolioView({
         </div>
 
         {/* Right: the floating 3D object, colored to match the active theme. */}
-        <div className="relative h-72 w-full flex-1 sm:h-96">
+        <div className="relative h-72 w-full flex-1 sm:h-96 no-print">
           <HeroScene3D
             color={(THEME_3D[theme] || THEME_3D.forest).color}
             emissive={(THEME_3D[theme] || THEME_3D.forest).emissive}
@@ -172,7 +180,7 @@ export default function PortfolioView({
 
       {/* ---------- Optional action (e.g. Save & Share) ---------- */}
       {actionSlot && (
-        <section className="mx-auto max-w-md px-6 pt-8">{actionSlot}</section>
+        <section className="mx-auto max-w-md px-6 pt-8 no-print">{actionSlot}</section>
       )}
 
       {/* ---------- Stats ---------- */}
