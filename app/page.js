@@ -7,6 +7,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import ThemeSwitcher from "./components/ThemeSwitcher";
 
 // The three feature cards shown below the input.
 const features = [
@@ -107,6 +108,12 @@ export default function HomePage() {
         >
           Generate Portfolio
         </button>
+
+        {/* Theme picker — the choice carries through to the generated portfolio
+            (and its PDF + saved page) via localStorage. */}
+        <div className="mt-6 border-t border-border pt-5">
+          <ThemeSwitcher />
+        </div>
       </div>
 
       {/* ---------- Feature cards ---------- */}
