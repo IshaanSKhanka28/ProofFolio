@@ -9,7 +9,6 @@ import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import PortfolioView from "../../components/PortfolioView";
 import SaveShare from "../../components/SaveShare";
-import ThemeSwitcher from "../../components/ThemeSwitcher";
 import FeaturedPicker from "../../components/FeaturedPicker";
 
 export default function PortfolioPage() {
@@ -27,9 +26,14 @@ export default function PortfolioPage() {
   const [customDescription, setCustomDescription] = useState("");
   const [contactPhone, setContactPhone] = useState("");
 
-  // The live theme (kept in sync with the theme switcher) so the 3D object
-  // can re-color as the user switches themes.
+  // The theme is now chosen on the landing page. We read that saved choice on
+  // load and apply it here (accent + 3D object color + what gets saved).
   const [theme, setTheme] = useState("forest");
+  useEffect(() => {
+    const saved = localStorage.getItem("pf-theme") || "forest";
+    setTheme(saved);
+    document.documentElement.dataset.theme = saved;
+  }, []);
 
   // Featured repo names (max 6) — selected ones show first in the grid.
   const [featuredRepos, setFeaturedRepos] = useState([]);
@@ -106,8 +110,6 @@ export default function PortfolioPage() {
       }
       actionSlot={
         <div className="flex flex-col items-center gap-5">
-          <ThemeSwitcher onChange={setTheme} />
-
           {/* Customize card: optional fields saved with the portfolio.
               These appear ONLY here on /u (as inputs), never on /p. */}
           <div className="w-full bg-card border border-border rounded-2xl p-5">
