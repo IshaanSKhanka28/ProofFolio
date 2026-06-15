@@ -37,7 +37,8 @@ visually stunning portfolio. One username. One click. Real proof.
 ---
 
 ## 🏗️ Architecture
-[Architecture](architecture.png)
+
+![ProofFolio architecture diagram](architecture.png)
 
 USER (browser)
 
