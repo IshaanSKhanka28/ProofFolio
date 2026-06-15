@@ -4,7 +4,7 @@
 > portfolio from any GitHub username in seconds.
 
 ## 🔗 Live Demo
-**[proof-folio.vercel.app](https://your-actual-vercel-url.vercel.app)**
+https://proof-folio.vercel.app/
 
 Try it: enter any GitHub username and click Generate.
 
