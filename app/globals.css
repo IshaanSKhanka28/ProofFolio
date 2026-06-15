@@ -241,9 +241,8 @@ body::before {
     --border: #d0d0d0 !important;
     --muted: #555555 !important;
     --surface: #f3f3f3 !important;
-    --accent: #2f6b4a !important; /* darker green for ink contrast */
     --accent-soft: transparent !important;
-    --brand-light: #2f6b4a !important;
+    /* Keep each theme's --accent so the chosen theme color shows in the PDF. */
   }
 
   body {
@@ -266,11 +265,12 @@ body::before {
     display: none !important;
   }
 
-  /* Make the gradient wordmark a solid dark green so it reads on white. */
+  /* Make the gradient wordmark a solid color in the active theme's accent so
+     it reads on white AND reflects the chosen theme. */
   .brand-grad {
     background: none !important;
-    -webkit-text-fill-color: #2f6b4a !important;
-    color: #2f6b4a !important;
+    -webkit-text-fill-color: var(--accent) !important;
+    color: var(--accent) !important;
   }
 
   /* Framer Motion hides un-scrolled sections (opacity 0); force everything

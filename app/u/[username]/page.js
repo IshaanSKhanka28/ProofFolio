@@ -94,6 +94,8 @@ export default function PortfolioPage() {
       repos={data.repos}
       stats={data.stats}
       theme={theme}
+      customDescription={customDescription}
+      contactPhone={contactPhone}
       featuredRepos={featuredRepos}
       repoPickerSlot={
         <FeaturedPicker
